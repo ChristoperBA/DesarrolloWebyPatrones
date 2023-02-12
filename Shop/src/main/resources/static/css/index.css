@@ -6,44 +6,44 @@
 .block{
     background-color: grey;
     padding: 20px;
-    
+
     border: 20px solid blue;
     margin: 20px ;
-    
+
     width: 200px;
     height: 200px;
-    
+
     box-sizing: border-box;
-    
-    
+
+
 }
 .static{
-    
+
     position: static;
     border: 3px solid green;
     top: 500px;
     width: 200px;
     height: 200px;
-    
+
 }
 .relative{
-    
+
     position: relative;
     border: 3px solid yellow;
     top: 100px;
     left: 500px;
     width: 400px;
     height: 400px;
-         
+
 }
 .fixed{
-     position: fixed;
+    position: fixed;
     border: 3px solid red;
     top: 150px;
     left: 50px;
     width: 100px;
     height: 100px;
-    
+
 }
 .absolute{
     position: absolute;
@@ -52,4 +52,14 @@
     left: 100px;
     width: 100px;
     height: 100px;
+}
+.cuadrado{
+    width: 200px;
+    height: 200px;
+    background: red;
+    margin-bottom: 20px;
+
+    /*(Display)Cambiar el tamaño de las etiquetas, que se van a utilizar */
+    display: inline-block;
+
 }

@@ -1,0 +1,50 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Feb 10, 2023, 9:53:19 PM
+    Author     : Christopher Briceño
+*/
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Signika Negative', serif;
+}
+body{
+    background: linear-gradient(120deg,purple,red);
+    height: 100vh;
+    
+}
+.center{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 400px;
+    background:white;
+    border-radius: 10px;
+}
+center h1{
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 1px solid silver;
+}
+.center form{
+    padding:0 40px;
+    box-sizing: border-box;
+
+}
+form .txt field{
+    position: relative;
+    border-bottom: 2px solid silver;
+    margin: 30px 0;
+}
+.txt_field input{
+   width: 100%;
+   padding: 0 5px;
+   height: 40px;
+   font-size: 16px;
+   border:none;
+   background: none;
+}
