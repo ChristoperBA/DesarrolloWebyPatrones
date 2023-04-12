@@ -4,4 +4,7 @@ com\tienda\service\IPaisService.class
 com\tienda\service\IPersonaService.class
 com\tienda\service\PaisService.class
 com\tienda\TiendaApplication.class
+com\tienda\repository\PersonaRepository.class
 com\tienda\entity\Pais.class
+com\tienda\service\PersonaService.class
+com\tienda\controller\PersonaController.class

@@ -1,0 +1,277 @@
+Recorte #1
+La clase SecurityConfig
+
+*********************
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter{
+    //El siguiente método funciona para hacer la auttenticación del usuario
+   @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+        auth.inMemoryAuthentication()
+                .withUser("juan")
+                    .password("{noop}123")
+                    .roles("ADMIN","VENDEDOR","USER")
+                .and()
+                .withUser("rebeca")
+                    .password("{noop}123")
+                    .roles("VENDEDOR","USER")
+                .and()
+                .withUser("pedro")
+                    .password("{noop}123")
+                    .roles("USER");
+    }
+}
+
+*********************
+
+
+Recorte #2
+El formulario de logout en la sección de footer en la platilla
+*********************
+
+<form method="POST" th:action="@{/logout}" style="display: inline">                    
+    <a href="#" onclick="this.parentNode.submit();">Logout</a>
+</form>
+
+*********************
+
+
+Recorte #3
+El método addViewControllers en WebConfig
+*********************
+
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+
+ @Override
+    public void addViewControllers(ViewControllerRegistry registro){
+        registro.addViewController("/").setViewName("index");
+        registro.addViewController("/login");
+        registro.addViewController("/errores/403").setViewName("/errores/403");
+    }
+
+*********************
+
+
+Recorte #4
+Se agregan 7 textos en los archivos de mensajes
+*********************
+
+login.username=Usuario
+login.password=Contraseña
+login.login=Autenticar
+
+e403.titulo=Acceso denegado
+e403.texto=No tiene permisos para ver esta página o ejecutar esta acción
+
+plantilla.tusuario=Usuario
+plantilla.troles=Roles
+plantilla.logout=Salir
+plantilla.admin=Admin
+
+
+*********************
+
+
+Recorte #5
+La página login.html
+*********************
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://wwww.thymeleaf.org">
+    <head>
+        <title>TechShop</title>
+        <meta charset="UTF-8"/>
+        <style>
+            .contenido {
+                text-align: center; border-radius: 20px;
+                top:50%; left: 50%; margin-left: -200px; margin-top: -125px;
+                width: 400px; height: 250px;
+                background-color: grey;
+                position: fixed;                
+                overflow: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="contenido">
+            <h2 th:text="#{login.login}" style="text-align: center">Login</h2>            
+            <form method="POST" th:action="@{/login}">
+                <label for="username" th:text="#{login.username}">Username:</label><br/>
+                <input type="text" name="username" id="username"/>
+                <br/><br/>
+                <label for="password" th:text="#{login.password}">Password</label><br/>
+                <input type="password" name="password" id="password"/>
+                <br/><br/>
+                <button type="submit" value="Login" th:text="#{login.login}">Login</button>
+            </form>
+        </div>        
+    </body>
+</html>
+
+*********************
+
+Recorte #6
+La página 403.html
+*********************
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://wwww.thymeleaf.org">
+    <head>
+        <title>TechShop</title>
+        <meta charset="UTF-8"/>
+        <style>
+            .contenido {
+                text-align: center; border-radius: 20px;
+                top:50%; left: 50%; margin-left: -250px; margin-top: -75px;
+                width: 500px; height: 150px;
+                background-color: red;
+                position: fixed;                
+                overflow: auto;
+            }
+        </style>
+    </head>
+    <body>       
+        <div class="contenido">
+            <h2>[[#{e403.titulo}]]</h2>
+            <p>[[#{e403.texto}]]</p>
+            <a th:href="@{/}">[[#{accion.regresar}]]</a>
+        </div>        
+    </body>
+</html>
+
+
+*********************
+
+
+Recorte #7
+El método configure(HttpSecurity en la clase SecurityConfig
+*********************
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception{
+        http.authorizeRequests()
+                .antMatchers("/articulo/nuevo",        "/articulo/guardar", 
+                             "/articulo/modificar/**", "/articulo/eliminar/**",
+                             "/categoria/nuevo",       "/categoria/guardar",
+                             "/categoria/modificar/**","/categoria/eliminar/**",
+                             "/cliente/nuevo",         "/cliente/guardar",  
+                             "/cliente/modificar/**",  "/cliente/eliminar/**",
+                             "/usuario/listado",  
+                             "/usuario/nuevo",         "/usuario/guardar",  
+                             "/usuario/modificar/**",  "/usuario/eliminar/**")
+                    .hasRole("ADMIN")
+                .antMatchers("/articulo/listado", "/categoria/listado",
+                             "/cliente/listado")
+                    .hasAnyRole("ADMIN","VENDEDOR")
+                .antMatchers("/")
+                    .hasAnyRole("USER","VENDEDOR","ADMIN")
+                .and()
+                    .formLogin()
+                    .loginPage("/login")
+                .and()
+                    .exceptionHandling().accessDeniedPage("/errores/403");
+    } 
+
+
+*********************
+
+
+Rercorte #8
+Se agrega la librería de extras de springsecurity5 al pmo.xml
+*********************
+
+<dependency>
+  <groupId>org.thymeleaf.extras</groupId>
+  <artifactId>thymeleaf-extras-springsecurity5</artifactId>            
+</dependency>
+
+*********************
+
+
+Recorte #9
+El encabezado HTML que debe estar en todas las páginas html
+*********************
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://wwww.thymeleaf.org" 
+      xmlns:sec="http://thymeleaft.org/extras/spring-security">
+
+*********************
+
+
+Recorte #10
+Adicional en el div del footer.. luego de los idiomas, antes del form
+*********************
+
+[[plantilla.tusuario]]: <span sec:authentication="name">xx</span> |
+[[plantilla.troles]]: <span sec:authentication="principal.authorities">s</span> |
+
+
+*********************
+
+
+Recorte #11
+Instruccion para habilitar la opcion si se tiene el rol adecuado
+*********************
+
+ sec:authorize="hasRole('ROLE_VENDEDOR')"
+ sec:authorize="hasRole('ROLE_ADMIN')"
+
+*********************
+
+
+Recorte #12
+Script para crear los usuarios del sistema
+*********************
+
+create table techshop.usuario(  
+     id_usuario INT NOT NULL AUTO_INCREMENT,  
+     username varchar(40) not null,  
+     password varchar(250) not null,  
+     correo varchar(50) not null,  
+     PRIMARY KEY (id_usuario)  
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_eo_0900_ai_ci;
+
+create table techshop.rol (  
+      id_rol INT NOT NULL AUTO_INCREMENT,  
+      nombre varchar(25), 
+      id_usuario int not null,  
+      PRIMARY KEY (id_rol),  
+      foreign key fk_rol_usuario (id_usuario) references usuario(id_usuario)  
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4COLLATE = utf8mb4_eo_0900_ai_ci;
+
+insert into techshop.usuario values 
+(1,'juan','123','juan@gmail.com'),
+(2,'rebeca','123','rebeca@gmail.com'),
+(3,'pedro','123','pedro@gmail.com');
+insert into techshop.rol values 
+(1,'ROLE_ADMIN',1),
+(2,'ROLE_VENDEDOR',1),
+(3,'ROLE_USER',1),
+(4,'ROLE_VENDEDOR',2),
+(5,'ROLE_USER',2),
+(6,'ROLE_USER',3);
+
+
+*********************
